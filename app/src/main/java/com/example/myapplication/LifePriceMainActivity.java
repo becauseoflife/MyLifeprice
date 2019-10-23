@@ -4,6 +4,8 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,7 +24,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.data.FileDataSource;
+import com.example.myapplication.data.GoodFragmentPagerAdapter;
 import com.example.myapplication.data.model.Good;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,16 +51,38 @@ public class LifePriceMainActivity extends AppCompatActivity {
 
         InitData();
 
-        listViewSuper= (ListView) this.findViewById(R.id.list_view_goods);
+/*        listViewSuper= (ListView) this.findViewById(R.id.list_view_goods);
         theAdaper=new GoodsArrayAdapter(this,R.layout.list_item_good,theGoods);
         listViewSuper.setAdapter(theAdaper);
 
-        this.registerForContextMenu(listViewSuper);
+        this.registerForContextMenu(listViewSuper);*/
+
+        theAdaper=new GoodsArrayAdapter(this,R.layout.list_item_good,theGoods);
+
+        GoodFragmentPagerAdapter myPageAdapter = new GoodFragmentPagerAdapter(getSupportFragmentManager());
+
+        ArrayList<Fragment> datas = new ArrayList<>();
+        datas.add(new GoodListFragment(theAdaper));
+        datas.add(new WebFragment());
+        myPageAdapter.setData(datas);
+
+        ArrayList<String> titles = new ArrayList<>();
+        titles.add("商品");
+        titles.add("信息");
+/*        titles.add("C");*/
+        myPageAdapter.setTitles(titles);
+
+        TabLayout tabLayout = findViewById(R.id.tablayout);
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        // 将适配器设置进ViewPager
+        viewPager.setAdapter(myPageAdapter);
+        // 将ViewPager与TabLayout相关联
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if(v==listViewSuper) {
+        if(v==this.findViewById(R.id.list_view_goods)) {
             int itemPosition=((AdapterView.AdapterContextMenuInfo)menuInfo).position;
             menu.setHeaderTitle(theGoods.get(itemPosition).getName());
             menu.add(0, CONTEXT_MENU_ITEM_NEW, 0, "新建");
