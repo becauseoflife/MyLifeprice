@@ -64,12 +64,13 @@ public class LifePriceMainActivity extends AppCompatActivity {
         ArrayList<Fragment> datas = new ArrayList<>();
         datas.add(new GoodListFragment(theAdaper));
         datas.add(new WebFragment());
+        datas.add(new MapFragment());
         myPageAdapter.setData(datas);
 
         ArrayList<String> titles = new ArrayList<>();
         titles.add("商品");
         titles.add("信息");
-/*        titles.add("C");*/
+        titles.add("卖家");
         myPageAdapter.setTitles(titles);
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
@@ -182,8 +183,8 @@ public class LifePriceMainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         fileDataSource.save();
     }
 
@@ -209,9 +210,9 @@ public class LifePriceMainActivity extends AppCompatActivity {
             LayoutInflater mInflater= LayoutInflater.from(this.getContext());
             View item = mInflater.inflate(this.resourceId,null);
 
-            ImageView img = (ImageView)item.findViewById(R.id.image_view_good);
-            TextView name = (TextView)item.findViewById(R.id.text_view_name);
-            TextView price = (TextView)item.findViewById(R.id.text_view_price);
+            ImageView img = item.findViewById(R.id.image_view_good);
+            TextView name = item.findViewById(R.id.text_view_name);
+            TextView price = item.findViewById(R.id.text_view_price);
 
             Good good_item= this.getItem(position);
             img.setImageResource(good_item.getPictureId());
