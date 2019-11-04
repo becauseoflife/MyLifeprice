@@ -24,7 +24,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="osnNwbF1q5OmGG3ip1XStRbxrQZrgqXA" />
+            android:value="YOizz1OtHZTcqEakXnHScqFzNU5aEm37" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

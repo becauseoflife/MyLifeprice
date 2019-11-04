@@ -1,10 +1,13 @@
 package com.example.myapplication;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,8 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.example.myapplication.data.ShopLoader;
+import com.example.myapplication.data.model.Shop;
 
 
 /**
@@ -67,7 +72,41 @@ public class MapFragment extends Fragment {
             }
         });
 
+        downloadAndDrawShops(baiduMap);
         return view;
+    }
+
+    private void downloadAndDrawShops(final BaiduMap baiduMap) {
+        final ShopLoader shopLoader = new ShopLoader();
+        @SuppressLint("HandlerLeak") final Handler handler = new Handler()
+        {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                for (int i=0; i<shopLoader.getShops().size(); i++)
+                {
+                    Shop shop = shopLoader.getShops().get(i);
+                    LatLng Point = new LatLng(shop.getLatitude(), shop.getLongitude());
+
+                    BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.a1);
+                    MarkerOptions markerOption = new MarkerOptions().icon(bitmap).position(Point);
+                    Marker marker = (Marker) baiduMap.addOverlay(markerOption);
+                    //添加文字
+                    OverlayOptions textOption = new TextOptions().bgColor(0xAAFFFF00).fontSize(50)
+                            .fontColor(0xFFFF00FF).text(shop.getName()).rotate(0).position(Point);
+                    baiduMap.addOverlay(textOption);
+                }
+            }
+        };
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                String data = shopLoader.download("http://file.nidama.net/class/mobile_develop/data/bookstore.json");
+                shopLoader.parseJson(data);
+                handler.sendEmptyMessage(1);
+            }
+        };
+        new Thread(run).start();
     }
 
     private MapView mMapView = null;
