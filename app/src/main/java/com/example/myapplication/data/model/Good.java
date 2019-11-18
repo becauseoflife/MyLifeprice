@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 
 public class Good implements Serializable {
+
     private String name;
     private double price;
     private int pictureId;

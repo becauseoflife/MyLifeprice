@@ -16,7 +16,7 @@ android {
             jniLibs.srcDir 'libs'
         }
     }
-    testOptions{
+    testOptions {
         unitTests.returnDefaultValues = true;
     }
     buildTypes {
